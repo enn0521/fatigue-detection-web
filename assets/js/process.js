@@ -40,7 +40,9 @@ function updateData(data) {
     data.perclos != null ? (Number(data.perclos) * 100).toFixed(1) + "%" : "--";
 
   document.getElementById("baseline-ear-threshold-info").textContent =
-    data.baseline_ear != null ? Number(data.baseline_ear).toFixed(2) : "--";
+    data.baseline_ear != null
+      ? Number(data.baseline_ear_threshold).toFixed(2)
+      : "--";
 
   // =======================================================
   // Mouth
@@ -57,7 +59,9 @@ function updateData(data) {
   );
 
   document.getElementById("baseline-mar-threshold-info").textContent =
-    data.baseline_mar != null ? Number(data.baseline_mar).toFixed(2) : "--";
+    data.baseline_mar != null
+      ? Number(data.baseline_mar_threshold).toFixed(2)
+      : "--";
 
   // =======================================================
   // Threshold

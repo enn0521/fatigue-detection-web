@@ -260,8 +260,8 @@ def calibration_status():
         "is_calibrated": state.is_calibrated,
         "progress": len(state.calibration_ear_samples),
         "target": Config.CALIBRATION_FRAMES,
-        "baseline_ear": state.baseline_ear,
-        "baseline_mar": state.baseline_mar,
+        "baseline_ear_threshold": state.baseline_ear,
+        "baseline_mar_threshold": state.baseline_mar,
         "ear_threshold": state.ear_threshold,
         "mar_threshold": state.mar_threshold,
     })

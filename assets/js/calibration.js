@@ -62,8 +62,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.is_calibrated) {
           statusText.textContent = "已校準";
 
-          
-
           setCalibrationButtonLabel(true);
           startBtn.disabled = false;
 
