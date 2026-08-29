@@ -40,7 +40,7 @@ function updateData(data) {
     data.perclos != null ? (Number(data.perclos) * 100).toFixed(1) + "%" : "--";
 
   document.getElementById("baseline-ear-threshold-info").textContent =
-    data.baseline_ear != null
+    data.baseline_ear_threshold != null
       ? Number(data.baseline_ear_threshold).toFixed(2)
       : "--";
 
@@ -59,7 +59,7 @@ function updateData(data) {
   );
 
   document.getElementById("baseline-mar-threshold-info").textContent =
-    data.baseline_mar != null
+    data.baseline_mar_threshold != null
       ? Number(data.baseline_mar_threshold).toFixed(2)
       : "--";
 
