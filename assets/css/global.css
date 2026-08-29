@@ -688,8 +688,9 @@ body {
   padding: 10px;
   border-top: 1px solid var(--default-border-color);
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 6px;
+  width: 100%;
 }
 
 .cali-value-row {
