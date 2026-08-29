@@ -654,7 +654,7 @@ body {
 }
 
 .cali-option-left input[type="radio"]:checked {
-  background-color: var(--color-button-bg);
+  background-color: var(--color-text-secondary);
 }
 
 .cali-baseline-option:has(input[type="radio"]:checked) {
@@ -675,7 +675,7 @@ body {
 }
 
 .cali-baseline-option-content > span:nth-child(2) {
-  color: var(--color-text-primary);
+  color: var(--color-text-secondary);
   font-family: var(--font-primary);
   font-size: 12px;
   line-height: 1;
@@ -723,8 +723,8 @@ body {
   padding: 6px 10px;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--color-surface);
-  border-radius: 10px;
+  background-color: var(--color-surface-raised);
+  border-radius: 6px;
   gap: 8px;
 }
 
@@ -753,21 +753,17 @@ body {
   align-items: center;
   font-size: 12px;
   font-family: var(--font-primary);
-  background-color: var(--color-button-bg);
-  border: 1px solid var(--color-button-border);
-  border-radius: 10px;
+  background-color: transparent;
+  border: 1px solid var(--color-button-border-hover);
+  border-radius: 6px;
+  margin-top: 10px;
   line-height: 1;
   color: #fff;
-  cursor: default;
-  z-index: 1;
-  transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease;
+  cursor: pointer;
 }
 
 .calibration-btn:active {
-  background-color: var(--color-button-bg-active);
-  border-color: var(--color-button-border-active);
+  scale: 0.99;
 }
 
 .setting-option-state {
@@ -798,7 +794,7 @@ body {
   font-size: 13px;
 }
 
-.control-panel > .toggle_detection_button {
+.toggle_detection_button {
   height: 50px;
   border: none;
   background-color: white;
@@ -806,17 +802,18 @@ body {
   font-family: var(--font-medium);
   font-size: 14px;
   outline: none;
+  cursor: pointer;
   border-radius: 10px;
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
 }
 
-.control-panel > .toggle_detection_button:hover {
+.toggle_detection_button:hover {
   opacity: 0.9;
 }
 
-.control-panel > .toggle_detection_button_active {
+.toggle_detection_button_active {
   background-color: #ff4d4d;
   color: #fff;
 }
@@ -948,7 +945,7 @@ body {
 }
 
 .log span {
-  font-family: var(--consolas);
+  font-family: var(--font-mono);
   font-size: 13px;
 }
 
@@ -984,25 +981,22 @@ body {
   height: 30px;
   padding: 0 10px;
   gap: 6px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-button-border-hover);
   border-radius: 6px;
   background-color: transparent;
   color: var(--color-text-secondary);
   font-family: var(--font-primary);
   font-size: 13px;
-  cursor: default;
+  cursor: pointer;
   user-select: none;
-
-  transition:
-    background-color 0.15s ease,
-    border-color 0.15s ease,
-    color 0.15s ease;
 }
 
 .log-export-btn:hover {
-  background-color: var(--color-button-bg-hover);
-  border-color: var(--button-border-hover);
   color: #fff;
+}
+
+.log-export-btn:active {
+  scale: 0.99;
 }
 
 .log-export-btn svg {
