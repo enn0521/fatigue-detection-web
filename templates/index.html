@@ -20,7 +20,10 @@
     <script src="/assets/js/calibration.js" defer></script>
     <script src="/assets/js/reset_data.js" defer></script>
     <script src="/assets/js/alert.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"
+      defer
+    ></script>
     <script src="/assets/js/chart.js" defer></script>
     <script src="/assets/js/process.js" defer></script>
   </head>
@@ -421,6 +424,7 @@
                       name="cali-option"
                       value="default"
                       checked
+                      autocomplete="off"
                     />
                     <div class="cali-baseline-option-content">
                       <span>Default</span>
@@ -476,6 +480,7 @@
                       type="radio"
                       name="cali-option"
                       value="baseline"
+                      autocomplete="off"
                       disabled
                     />
                     <div class="cali-baseline-option-content">

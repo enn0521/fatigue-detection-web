@@ -85,19 +85,10 @@ function createRealtimeChart(canvasId, label, borderColor) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-
       animation: false,
-
       devicePixelRatio: 1,
-
       resizeDelay: 200,
-
       events: [],
-
-      interaction: {
-        mode: null,
-      },
-
       layout: {
         padding: 0,
       },
@@ -105,34 +96,27 @@ function createRealtimeChart(canvasId, label, borderColor) {
       scales: {
         x: {
           type: "linear",
-
           display: false,
-
           border: {
             display: false,
           },
-
           grid: {
             display: false,
           },
-
           min: 0,
           max: MAX_POINTS - 1,
         },
 
         y: {
           beginAtZero: true,
-
           border: {
             display: false,
           },
-
           ticks: {
             color: "#ffffff99",
             maxTicksLimit: 4,
             padding: 4,
           },
-
           grid: {
             color: "#ffffff1a",
           },
@@ -143,7 +127,6 @@ function createRealtimeChart(canvasId, label, borderColor) {
         legend: {
           display: false,
         },
-
         tooltip: {
           enabled: false,
         },
@@ -158,7 +141,6 @@ function createRealtimeChart(canvasId, label, borderColor) {
 
 function initRealtimeCharts() {
   earChart = createRealtimeChart("ear-chart", "EAR", "#4ade80");
-
   marChart = createRealtimeChart("mar-chart", "MAR", "#60a5fa");
 }
 

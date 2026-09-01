@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const baselineRadio = document.querySelector(
     'input[name="cali-option"][value="baseline"]',
   );
-
   const defaultRadio = document.querySelector(
     'input[name="cali-option"][value="default"]',
   );
@@ -18,8 +17,11 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
+  if (defaultRadio) defaultRadio.checked = true;
   if (baselineRadio) {
+    baselineRadio.checked = false;
     baselineRadio.disabled = true;
+    delete baselineRadio.dataset.wasCalibrated;
   }
 
   startBtn.disabled = true;
@@ -37,31 +39,35 @@ document.addEventListener("DOMContentLoaded", () => {
     startBtn.textContent = isCalibrated ? "重新校準" : "開始校準";
   }
 
+  async function fetchStatus() {
+    const res = await fetch("/calibration_status", {
+      cache: "no-store",
+      headers: { "Cache-Control": "no-cache" },
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch calibration status");
+    }
+
+    return res.json();
+  }
+
   function pollStatus() {
     stopPolling();
 
     pollTimer = setInterval(async () => {
       try {
-        const res = await fetch("/calibration_status");
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch calibration status");
-        }
-
-        const data = await res.json();
+        const data = await fetchStatus();
 
         if (data.is_calibrating) {
           statusText.textContent = `校準中... ${data.progress}/${data.target}`;
-
           startBtn.textContent = "校準中...";
           startBtn.disabled = true;
-
           return;
         }
 
         if (data.is_calibrated) {
           statusText.textContent = "已校準";
-
           setCalibrationButtonLabel(true);
           startBtn.disabled = false;
 
@@ -71,7 +77,6 @@ document.addEventListener("DOMContentLoaded", () => {
           }
 
           stopPolling();
-
           return;
         }
 
@@ -82,9 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
         stopPolling();
       } catch (error) {
         console.error("[CALIBRATION]", error);
-
         startBtn.disabled = false;
-
         stopPolling();
       }
     }, 300);
@@ -97,6 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const res = await fetch("/start_calibration", {
         method: "POST",
+        cache: "no-store",
       });
 
       const data = await res.json();
@@ -106,15 +110,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       statusText.textContent = `校準中... 0/${data.target_frames}`;
-
       pollStatus();
     } catch (error) {
       console.error("[CALIBRATION]", error);
-
       if (typeof addSystemLog === "function") {
         addSystemLog(`[ERROR] ${error.message}`, "warning");
       }
-
       setCalibrationButtonLabel(false);
       startBtn.disabled = false;
     }
@@ -126,77 +127,72 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
           const res = await fetch("/select_calibration", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              mode: "default",
-            }),
+            cache: "no-store",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ mode: "default" }),
           });
 
           const data = await res.json();
-
-          if (!res.ok) {
+          if (!res.ok)
             throw new Error(data.message || "Failed to switch calibration");
-          }
 
           if (typeof addSystemLog === "function") {
             addSystemLog("[CALIBRATION] Default", "info");
           }
         } catch (error) {
           console.error("[CALIBRATION]", error);
-
           if (typeof addSystemLog === "function") {
             addSystemLog(`[ERROR] ${error.message}`, "warning");
           }
         }
-
         return;
       }
 
       if (radio.value === "baseline") {
         if (!radio.dataset.wasCalibrated) {
           statusText.textContent = "尚未校準";
-
           if (typeof addSystemLog === "function") {
             addSystemLog("[CALIBRATION] Baseline", "info");
           }
-
           return;
         }
 
         try {
           const res = await fetch("/select_calibration", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              mode: "baseline",
-            }),
+            cache: "no-store",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ mode: "baseline" }),
           });
 
           const data = await res.json();
-
-          if (!res.ok) {
+          if (!res.ok)
             throw new Error(data.message || "Failed to switch calibration");
-          }
 
           if (typeof addSystemLog === "function") {
             addSystemLog("[CALIBRATION] Switched to baseline", "info");
           }
         } catch (error) {
           console.error("[CALIBRATION]", error);
-
           if (typeof addSystemLog === "function") {
             addSystemLog(`[ERROR] ${error.message}`, "warning");
           }
         }
-
         return;
       }
     });
   });
 
   pollStatus();
+
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) {
+      stopPolling();
+      pollStatus();
+    }
+  });
+
+  window.addEventListener("pagehide", () => {
+    stopPolling();
+  });
 });
