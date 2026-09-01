@@ -39,7 +39,6 @@ def reset_detection_state():
 
 
 def cancel_calibration_state():
-    # 新增：獨立出來的校準取消邏輯，供 reset / stop / 取消 API 共用
     state.is_calibrating = False
     state.calibration_ear_samples = []
     state.calibration_mar_samples = []
@@ -273,7 +272,6 @@ def calibration_status():
         "mar_threshold": state.mar_threshold,
     })
 
-    # 新增：避免部分瀏覽器/代理快取這支輪詢用的 GET 回應
     resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
 
     return resp
@@ -281,8 +279,6 @@ def calibration_status():
 
 @app.route("/cancel_calibration", methods=["POST"])
 def cancel_calibration():
-    # 新增：讓前端在使用者離開頁面/切換分頁時，
-    # 能主動中止校準，避免 is_calibrating 卡死在 True
     cancel_calibration_state()
 
     return jsonify({
