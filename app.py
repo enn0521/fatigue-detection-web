@@ -38,6 +38,13 @@ def reset_detection_state():
     state.reset_metrics()
 
 
+def cancel_calibration_state():
+    # 新增：獨立出來的校準取消邏輯，供 reset / stop / 取消 API 共用
+    state.is_calibrating = False
+    state.calibration_ear_samples = []
+    state.calibration_mar_samples = []
+
+
 # 鏡頭設定
 def open_camera(mode="16:9"):
     if state.current_camera is not None:
@@ -188,47 +195,47 @@ def video_feed():
 def get_data():
     if not state.started:
         return jsonify({
-        "fps": state.camera_fps,
-        "latency": round(state.latency),
-        "faces": 0,
-        "left_ear": None,
-        "right_ear": None,
-        "ear": None,
-        "mar": None,
-        "blink_times": 0,
-        "yawn_times": 0,
-        "eye_closure_dur": 0.0,
-        "yawn_dur": 0.0,
-        "perclos": 0.0,
-        "fatigue_level": "Normal",
-        "fatigue_score": 0,
-        "ear_threshold": state.ear_threshold,
-        "mar_threshold": state.mar_threshold,
-        "default_ear_threshold": Config.EAR_CLOSED_THRESHOLD,
-        "default_mar_threshold": Config.YAWN_THRESHOLD,      
-        "baseline_ear_threshold": state.baseline_ear,
-        "baseline_mar_threshold": state.baseline_mar,
+            "fps": state.camera_fps,
+            "latency": round(state.latency),
+            "faces": 0,
+            "left_ear": None,
+            "right_ear": None,
+            "ear": None,
+            "mar": None,
+            "blink_times": 0,
+            "yawn_times": 0,
+            "eye_closure_dur": 0.0,
+            "yawn_dur": 0.0,
+            "perclos": 0.0,
+            "fatigue_level": "Normal",
+            "fatigue_score": 0,
+            "ear_threshold": state.ear_threshold,
+            "mar_threshold": state.mar_threshold,
+            "default_ear_threshold": Config.EAR_CLOSED_THRESHOLD,
+            "default_mar_threshold": Config.YAWN_THRESHOLD,
+            "baseline_ear_threshold": state.baseline_ear,
+            "baseline_mar_threshold": state.baseline_mar,
         })
 
     return jsonify({
         "fps": state.camera_fps,
         "latency": round(state.latency),
-        "faces": 0,
-        "left_ear": None,
-        "right_ear": None,
-        "ear": None,
-        "mar": None,
-        "blink_times": 0,
-        "yawn_times": 0,
-        "eye_closure_dur": 0.0,
-        "yawn_dur": 0.0,
-        "perclos": 0.0,
-        "fatigue_level": "Normal",
-        "fatigue_score": 0,
+        "faces": state.face_count,
+        "left_ear": state.left_ear,
+        "right_ear": state.right_ear,
+        "ear": state.ear,
+        "mar": state.mar,
+        "blink_times": state.blink_times,
+        "yawn_times": state.yawn_times,
+        "eye_closure_dur": state.eye_closure_dur,
+        "yawn_dur": state.yawn_dur,
+        "perclos": state.perclos,
+        "fatigue_level": state.fatigue_level,
+        "fatigue_score": state.fatigue_score,
         "ear_threshold": state.ear_threshold,
         "mar_threshold": state.mar_threshold,
         "default_ear_threshold": Config.EAR_CLOSED_THRESHOLD,
-        "default_mar_threshold": Config.YAWN_THRESHOLD,      
+        "default_mar_threshold": Config.YAWN_THRESHOLD,
         "baseline_ear_threshold": state.baseline_ear,
         "baseline_mar_threshold": state.baseline_mar,
     })
@@ -255,7 +262,7 @@ def start_calibration():
 
 @app.route("/calibration_status")
 def calibration_status():
-    return jsonify({
+    resp = jsonify({
         "is_calibrating": state.is_calibrating,
         "is_calibrated": state.is_calibrated,
         "progress": len(state.calibration_ear_samples),
@@ -264,6 +271,22 @@ def calibration_status():
         "baseline_mar_threshold": state.baseline_mar,
         "ear_threshold": state.ear_threshold,
         "mar_threshold": state.mar_threshold,
+    })
+
+    # 新增：避免部分瀏覽器/代理快取這支輪詢用的 GET 回應
+    resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
+
+    return resp
+
+
+@app.route("/cancel_calibration", methods=["POST"])
+def cancel_calibration():
+    # 新增：讓前端在使用者離開頁面/切換分頁時，
+    # 能主動中止校準，避免 is_calibrating 卡死在 True
+    cancel_calibration_state()
+
+    return jsonify({
+        "status": "cancelled"
     })
 
 
@@ -349,6 +372,10 @@ def stop_detection():
     state.started = False
 
     state.reset_metrics()
+
+    # 新增：偵測停止時，若校準尚未完成，一併取消，
+    # 避免下次進頁面時卡在「校準中」
+    cancel_calibration_state()
 
     return jsonify({
         "started": False,

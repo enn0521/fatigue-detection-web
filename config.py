@@ -1,5 +1,5 @@
 class Config:
-    
+
     # ========== Camera ==========
     CAMERA_ID = 0
     CAMERA_BACKEND = 0
@@ -10,14 +10,13 @@ class Config:
 
     LANDSCAPE_WIDTH = 960
     LANDSCAPE_HEIGHT = 540
-    
+
     # ========== Model ==========
     MODEL_PATH = 'model/face_landmarker.task'
-    
-    
+
     # ========== Image ==========
     DETECTION_MAX_WIDTH = 640
-    QUALITY = 60
+    JPEG_QUALITY = 60
 
     # ========================================================================================
     # Mediapipe Face Landmark
@@ -67,7 +66,6 @@ class Config:
         "bottom": 14
     }
 
-
     # ========== 系統參數 ==========
     FPS = 30
 
@@ -75,7 +73,7 @@ class Config:
     WINDOWS_SEC = 5
     WINDOW_SIZE = FPS * WINDOWS_SEC
 
-    # ========== 門檻設定 ==========
+    # ========== 門檻設定 (系統預設值) ==========
 
     # 眼睛閉合率門檻
     EAR_CLOSED_THRESHOLD = 0.2
@@ -97,26 +95,32 @@ class Config:
     YAWN_MIN_FRAMES = 30
     YAWN_MIN_DURATION = YAWN_MIN_FRAMES / FPS
 
+    # 低頭率門檻(disabled)
+    NOD_RATIO_THRESHOLD = 0.3
+
     # ========== 校準 ==========
-    CALIBRATION_FRAMES = 60  # 校準需要花費的時間 (幀數)
+    CALIBRATION_FRAMES = 100 # 校準需要花費的時間 (幀數)
+
+    # Baseline 校準後計算門檻的公式參數
+    # ear_threshold = baseline_ear * CALIBRATION_EAR_RATIO
+    CALIBRATION_EAR_RATIO = 0.75
+
+    # mar_threshold = baseline_mar + CALIBRATION_MAR_OFFSET
+    CALIBRATION_MAR_OFFSET = 0.25
+
+    # ========== 疲勞分數 ==========
+    PERCLOS_SEVERE_RATIO = 0.4
+    YAWN_RATE_SEVERE_PER_MIN = 3.0
+
+    FATIGUE_WEIGHT_PERCLOS = 0.5
+    FATIGUE_WEIGHT_EYE_CLOSURE = 0.3
+    FATIGUE_WEIGHT_YAWN = 0.2
+
+    FATIGUE_SCORE_MILD = 30
+    FATIGUE_SCORE_SEVERE = 60
 
     # ========== 警告 ==========
     ALERT_COOLDOWN_SECONDS = 5
 
     # ========== 日誌 ==========
     LOG_INTERVAL_SEC = 0.2
-    
-    # ========== 疲勞評分權重 ==========
-    FATIGUE_WEIGHT_PERCLOS = 0.5
-    FATIGUE_WEIGHT_EYE_CLOSURE = 0.25
-    FATIGUE_WEIGHT_YAWN = 0.25
-    
-    PERCLOS_SEVERE_RATIO = 0.4
-    YAWN_RATE_SEVERE_PER_MIN = 4
-
-    FATIGUE_SCORE_MILD = 30
-    FATIGUE_SCORE_SEVERE = 70
-
-    # ========== 校準門檻換算 ==========
-    CALIBRATION_EAR_RATIO = 0.75      # 個人化 EAR 門檻 = baseline_ear * ratio
-    CALIBRATION_MAR_OFFSET = 0.30     # 個人化 MAR 門檻 = baseline_mar + offset

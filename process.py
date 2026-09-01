@@ -181,8 +181,7 @@ class DriverFatigueDetector:
             if (
                 now -
                 state.last_log_time
-                <
-                Config.LOG_INTERVAL_SEC
+                < Config.LOG_INTERVAL_SEC
             ):
                 return
 
@@ -290,6 +289,13 @@ class DriverFatigueDetector:
 
         state.fatigue_level = "Normal"
         state.fatigue_score = 0
+
+        # 新增：雙重保險 —— 就算之後有地方只呼叫 clear_log()
+        # 而沒呼叫 state.reset_metrics()，校準的「進行中」狀態
+        # 也不會殘留卡死，避免下次進頁面誤判為自動開始校準
+        state.is_calibrating = False
+        state.calibration_ear_samples = []
+        state.calibration_mar_samples = []
 
     def process_frame(
         self,
@@ -549,11 +555,22 @@ class DriverFatigueDetector:
     ):
         now = time.time()
 
+        ear_threshold = (
+            state.ear_threshold
+            if state.ear_threshold is not None
+            else Config.EAR_CLOSED_THRESHOLD
+        )
+
+        mar_threshold = (
+            state.mar_threshold
+            if state.mar_threshold is not None
+            else Config.YAWN_THRESHOLD
+        )
+
         # EAR 閉眼偵測
         is_closed_frame = (
             ear is not None and
-            ear <
-            state.ear_threshold
+            ear < ear_threshold
         )
 
         state.eye_closure_history.append(
@@ -599,7 +616,7 @@ class DriverFatigueDetector:
         if (
             mar is not None and
             mar >
-            state.mar_threshold
+            mar_threshold
         ):
             if not state.is_yawning:
                 state.is_yawning = True
@@ -795,26 +812,26 @@ class DriverFatigueDetector:
                 point_color = None
                 point_radius = 0
                 point_thickness = 0
-                
+
                 # 左眼
                 if idx in Config.LEFT_EAR_POINTS:
                     point_color = (255, 255, 255)
                     point_radius = 2
                     point_thickness = -1
-                    
+
                 # 右眼
                 elif idx in Config.RIGHT_EAR_POINTS:
                     point_color = (255, 255, 255)
                     point_radius = 2
                     point_thickness = -1
-                    
+
                 # 嘴巴
                 elif (hasattr(Config, 'MOUTH') and idx in Config.MOUTH) or \
                      (hasattr(Config, 'MAR_POINTS') and idx in Config.MAR_POINTS.values()):
                     point_color = (255, 255, 255)
                     point_radius = 2
                     point_thickness = -1
-                    
+
                 # 鼻子
                 elif hasattr(Config, 'NOSE') and idx in Config.NOSE:
                     point_color = (255, 255, 255)
