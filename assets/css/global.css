@@ -230,14 +230,6 @@ body {
   transition: opacity 0.25s ease;
 }
 
-.fd-overlay-top {
-  justify-content: space-between;
-}
-
-.fd-overlay-btm {
-  justify-content: space-between;
-}
-
 .fd-overlay-btm button {
   display: flex;
   justify-content: center;
@@ -252,12 +244,12 @@ body {
   transition: background-color 0.3s ease;
 }
 
-.fd-display .fd-overlay .fd-overlay-btm button:hover {
+.fd-overlay-btm button:hover {
   background-color: rgba(255, 255, 255, 0.2);
   cursor: pointer;
 }
 
-.fd-display .fd-overlay .fd-overlay-btm svg {
+.fd-overlay-btm svg {
   display: flex;
   height: 100%;
   aspect-ratio: 1/1;
@@ -265,19 +257,27 @@ body {
   align-items: center;
 }
 
-.fd-display .fd-overlay .fd-overlay-btm svg {
+.fd-overlay-btm svg {
   width: 16px;
   height: 16px;
 }
 
-.fd-display .fd-overlay .fd-pill {
+.fd-pill {
   display: flex;
   width: 100%;
   height: 28px;
   padding: 0 12px;
 }
 
-.fd-display .fd-overlay .fd-pill .overlay-left-control {
+.fd-overlay-top {
+  justify-content: space-between;
+}
+
+.fd-overlay-btm {
+  justify-content: space-between;
+}
+
+.fd-pill .overlay-left-control {
   position: relative;
   display: flex;
   flex: 1;
@@ -285,7 +285,7 @@ body {
   gap: 8px;
 }
 
-.fd-display .fd-overlay .fd-pill .overlay-right-control {
+.fd-pill .overlay-right-control {
   position: relative;
   display: flex;
   flex: 1;
@@ -293,11 +293,11 @@ body {
   gap: 8px;
 }
 
-.fd-display .fd-overlay .fd-pill .fullscreen-expand {
+.fd-pill .fullscreen-expand {
   display: flex;
 }
 
-.fd-display .fd-overlay .fd-pill .fullscreen-minimize {
+.fd-pill .fullscreen-minimize {
   display: none;
 }
 
@@ -754,12 +754,16 @@ body {
   font-size: 12px;
   font-family: var(--font-primary);
   background-color: transparent;
-  border: 1px solid var(--color-button-border-hover);
+  border: 1px solid var(--color-button-border);
   border-radius: 6px;
   margin-top: 10px;
   line-height: 1;
+  color: var(--color-text-secondary);
+}
+
+.calibration-btn:hover {
   color: #fff;
-  cursor: pointer;
+  border-color: var(--color-button-border-hover);
 }
 
 .calibration-btn:active {
@@ -892,7 +896,7 @@ body {
 .log-area {
   display: flex;
   width: 100%;
-  height: 120px;
+  height: 90px;
   box-sizing: border-box;
   padding: 0;
   border: 1px solid var(--color-border);
@@ -981,7 +985,7 @@ body {
   height: 30px;
   padding: 0 10px;
   gap: 6px;
-  border: 1px solid var(--color-button-border-hover);
+  border: 1px solid var(--color-button-border);
   border-radius: 6px;
   background-color: transparent;
   color: var(--color-text-secondary);
@@ -993,6 +997,7 @@ body {
 
 .log-export-btn:hover {
   color: #fff;
+  border-color: var(--color-button-border-hover);
 }
 
 .log-export-btn:active {
