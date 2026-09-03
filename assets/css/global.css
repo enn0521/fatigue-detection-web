@@ -400,11 +400,11 @@ body {
   transform: translateX(14px);
 }
 
-.fd-display .fd-overlay .fd-pill .setting-overlay-modal .setting-option:hover {
+.setting-overlay-modal .setting-option:hover {
   background-color: #007aff;
 }
 
-.fd-overlay .fd-pill .setting-overlay-modal .setting-option.disabled {
+.setting-overlay-modal .setting-option.disabled {
   opacity: 0.4;
   cursor: not-allowed !important;
   pointer-events: none;
@@ -441,25 +441,22 @@ body {
   overflow-x: auto;
 }
 
-.fd-state .stat-item {
+.stat-item {
   display: flex;
-
   width: 100%;
   flex-direction: column;
   gap: 2px;
   padding: 8px 12px;
-  background-color: var(--color-surface);
-  border-radius: 6px;
 }
 
-.fd-state .stat-label {
+.stat-label {
   color: var(--color-text-secondary);
   font-family: var(--font-primary);
   font-size: 11px;
   line-height: 1;
 }
 
-.fd-state .stat-value {
+.stat-value {
   color: #fff;
   font-family: var(--font-medium);
   font-size: 15px;
@@ -724,10 +721,8 @@ body {
   display: flex;
   width: 100%;
   min-width: 0;
-  padding: 6px 10px;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--color-surface-raised);
   border-radius: 6px;
   gap: 8px;
 }
